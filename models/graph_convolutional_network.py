@@ -10,9 +10,9 @@ import torch.nn.functional as F
 class Encoder(torch.nn.Module):
     def __init__(self, hidden_channels, out_channels, dropout_rate=0.5):
         super().__init__()
-        self.conv1 = GraphConv(-1, hidden_channels, add_self_loops=False)
-        self.conv2 = GraphConv(hidden_channels*1, hidden_channels, add_self_loops=False)
-        self.conv3 = GraphConv(hidden_channels*1, out_channels, add_self_loops=False)
+        self.conv1 = GraphConv(-1, hidden_channels)
+        self.conv2 = GraphConv(hidden_channels*1, hidden_channels)
+        self.conv3 = GraphConv(hidden_channels*1, out_channels)
         self.dropout = nn.Dropout(p=dropout_rate)
 
     def forward(self, x, edge_index, edge_weight):
