@@ -111,11 +111,11 @@ class DataPreprocessor:
         movie_embeddings_df.columns = ['MovieID'] + [f'movie_embedding_{i}' for i in range(movie_embeddings_df.shape[1] - 1)]
 
         # Ensure 'UserID' and 'MovieID' in 'ratings' are of type int
-        self.ratings['UserID'] = ratings['UserID'].astype(int)
-        self.ratings['MovieID'] = ratings['MovieID'].astype(int)
+        self.ratings['UserID'] = self.ratings['UserID'].astype(int)
+        self.ratings['MovieID'] = self.ratings['MovieID'].astype(int)
 
         # Step 3: Merge Embeddings with Ratings Data
-        rating2 = ratings.merge(user_embeddings_df, on='UserID', how='left')
+        rating2 = self.ratings.merge(user_embeddings_df, on='UserID', how='left')
         self.ratings = ratings2.merge(movie_embeddings_df, on='MovieID', how='left')
     
  
