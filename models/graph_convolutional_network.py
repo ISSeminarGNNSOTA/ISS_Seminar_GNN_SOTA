@@ -11,8 +11,8 @@ class Encoder(torch.nn.Module):
     def __init__(self, hidden_channels, out_channels, dropout_rate=0.5):
         super().__init__()
         self.conv1 = GraphConv(-1, hidden_channels)
-        self.conv2 = GraphConv(hidden_channels*3, hidden_channels)
-        self.conv3 = GraphConv(hidden_channels*3, out_channels)
+        self.conv2 = GraphConv(hidden_channels*1, hidden_channels)
+        self.conv3 = GraphConv(hidden_channels*1, out_channels)
         self.dropout = nn.Dropout(p=dropout_rate)
 
     def forward(self, x, edge_index, edge_weight):
@@ -29,8 +29,8 @@ class Predictor(torch.nn.Module):
     def __init__(self, input_dim, hidden_dim, out_dim, dropout_rate=0.5):
         super().__init__()
         self.fc1 = nn.Linear(input_dim*2, hidden_dim)
-        self.fc2 = nn.Linear(hidden_dim*2, hidden_dim)
-        self.fc3 = nn.Linear(hidden_dim*2, out_dim)
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc3 = nn.Linear(hidden_dim, out_dim)
         self.dropout = nn.Dropout(p=dropout_rate)
 
     def forward(self, x, edge_label_index):
