@@ -144,5 +144,5 @@ class DataPreprocessor:
 #To see movieInfo data --> preprocessor.movieInfo
 
 #To apply node2vec in order to get node embeddings
-#preprocessor.get_embeddings()
+#preprocessor.get_node_embeddings()
 #To see new rating data --> preprocessor.ratings
