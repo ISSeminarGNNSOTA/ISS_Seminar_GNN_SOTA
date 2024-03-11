@@ -13,7 +13,8 @@ class DataPreprocessor:
 
     def filter_data(self, min_userID=0, max_userID=100):
         self.df = self.df[(self.df['UserID'] >= min_userID) & (self.df['UserID'] <= max_userID)]
-
+        self.ratings = self.df.copy()
+        
     def create_rating_user_movie_info(self):
         ratings = self.df.copy()
         movies = self.df_movie.copy()
@@ -115,17 +116,33 @@ class DataPreprocessor:
         self.ratings['MovieID'] = self.ratings['MovieID'].astype(int)
 
         # Step 3: Merge Embeddings with Ratings Data
-        rating2 = self.ratings.merge(user_embeddings_df, on='UserID', how='left')
+        ratings2 = self.ratings.merge(user_embeddings_df, on='UserID', how='left')
         self.ratings = ratings2.merge(movie_embeddings_df, on='MovieID', how='left')
     
  
 
 # Usage example:
+#from data_preprocess_v4 import DataPreprocessor
 #df = pd.read_csv('/content/df_9500_17152.csv')
 #df_movie = pd.read_excel('/content/movie_titles.xlsx')
-
 #preprocessor = DataPreprocessor(df, df_movie)
-#preprocessor.filter_data(0, 100)
+
+#To filter our rating data
+#preprocessor.filter_data(0,50)
+#To see filtered data -->  preprocessor.ratings
+
+#To get the new variables (avg, count, releaseage etc.) on ratings dataframe and to get movieInfo and userInfo dataframes
 #preprocessor.create_rating_user_movie_info()
+#To see new rating data --> preprocessor.ratings
+#To see userInfo data --> preprocessor.userInfo
+#To see movieInfo data --> preprocessor.movieInfo
+
+#To apply NLP to movie_titles an get cluster dummies
 #preprocessor.perform_nlp_tasks()
-#preprocessor.merge_dataframes()
+#To see new rating data --> preprocessor.ratings
+#To see userInfo data --> preprocessor.userInfo
+#To see movieInfo data --> preprocessor.movieInfo
+
+#To apply node2vec in order to get node embeddings
+#preprocessor.get_embeddings()
+#To see new rating data --> preprocessor.ratings
