@@ -1,3 +1,7 @@
+# Ali Jaabous
+# Graph Sage Network
+# https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.nn.models.GraphSAGE.html
+
 from torch_geometric.nn import SAGEConv, Linear, to_hetero
 from torch_geometric.data import HeteroData
 import torch
