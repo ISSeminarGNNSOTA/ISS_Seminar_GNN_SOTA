@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import graph_predictor as Predictor
+from models.graph_predictor import Predictor
 
 class Encoder(torch.nn.Module):
     def __init__(self, hidden_channels, out_channels, dropout_rate=0.5):
@@ -36,4 +36,3 @@ class GraphSAGE(torch.nn.Module):
         x = self.encoder(x, edge_index, edge_weight)
         x = self.predictor(x, edge_label_index)
         return x
-
