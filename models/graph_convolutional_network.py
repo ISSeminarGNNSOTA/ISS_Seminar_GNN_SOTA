@@ -1,6 +1,6 @@
 # Ali Jaabous
 # Graph Convolutional Network
-# https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.nn.models.GAT.html
+# https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.nn.models.GCN.html
 
 from torch_geometric.nn import GraphConv, to_hetero
 import torch
