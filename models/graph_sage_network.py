@@ -3,7 +3,6 @@
 # https://pytorch-geometric.readthedocs.io/en/latest/generated/torch_geometric.nn.models.GraphSAGE.html
 
 from torch_geometric.nn import SAGEConv, Linear, to_hetero
-from torch_geometric.data import HeteroData
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
