@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import Graph_predictor as Predictor
+import graph_predictor as Predictor
 
 class Encoder(torch.nn.Module):
     def __init__(self, hidden_channels, out_channels, dropout_rate=0.5):
