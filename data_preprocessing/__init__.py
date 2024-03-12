@@ -1,9 +1,9 @@
 # Ali Jaabous
 # __init__- file for data_preprocessing 
 
-from data_preprocessing.DataPreprocessor import filter_data
-from data_preprocessing.DataPreprocessor import create_rating_user_movie_info
-from data_preprocessing.DataPreprocessor import perform_nlp_tasks
-from data_preprocessing.DataPreprocessor import get_node_embeddings
+from data_preprocessing.data_preprocess_v4 import filter_data
+from data_preprocessing.data_preprocess_v4 import create_rating_user_movie_info
+from data_preprocessing.data_preprocess_v4 import perform_nlp_tasks
+from data_preprocessing.data_preprocess_v4 import get_node_embeddings
 
 from data_preprocessing.MovieTitlesProcessor import process_movie_title
