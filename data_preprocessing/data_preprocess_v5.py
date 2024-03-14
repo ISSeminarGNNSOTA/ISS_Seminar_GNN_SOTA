@@ -1,7 +1,8 @@
 import pandas as pd
 from node2vec import Node2Vec
 import networkx as nx
-from movtit_nlp_v3 import MovieTitlesProcessor
+#from movtit_nlp_v3 import MovieTitlesProcessor
+from .movtit_nlp_v3 import MovieTitlesProcessor
 
 class DataPreprocessor:
     def __init__(self, df, df_movie, cluster_amount=5, model_name="all-MiniLM-L6-v2", nlp_performed=False):
