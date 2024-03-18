@@ -20,8 +20,9 @@ class MLPModelOptimized:
         self.X, self.y = self.prepare_data()
         self.X = self.scale_data(self.X)
 
-    def prepare_data(self):
-        X = np.column_stack((
+    
+    def extract_features(self):
+        self.X = np.column_stack((
         self.ratings['rating_count_per_user'],
         self.ratings['rating_count_per_movie'],
         self.ratings['avg_rating_per_person'],
@@ -54,8 +55,8 @@ class MLPModelOptimized:
         self.ratings['movie_embedding_16'], self.ratings['movie_embedding_17'],
         self.ratings['movie_embedding_18'], self.ratings['movie_embedding_19']
         ))
-    y = np.array(self.ratings['Rating'])
-    return X, y
+    self.y = np.array(self.ratings['Rating'])
+
 
 
     def scale_data(self, X):
