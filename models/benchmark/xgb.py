@@ -65,7 +65,7 @@ class XGBModel:
         self.ratings['movie_embedding_16'], self.ratings['movie_embedding_17'],
         self.ratings['movie_embedding_18'], self.ratings['movie_embedding_19']
         ))
-    self.y = np.array(self.ratings['Rating'])
+        self.y = np.array(self.ratings['Rating'])
 
 
 
