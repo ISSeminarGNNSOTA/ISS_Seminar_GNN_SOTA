@@ -18,12 +18,7 @@ class LRModel:
     def __init__(self, alpha=2.0):
         self.model = Ridge(alpha=alpha)
 
-    def extract_features(self, ratings):
-        X = np.column_stack((ratings['rating_count_per_user'], ratings['rating_count_per_movie'],
-                             ratings['avg_rating_per_person'], ratings['avg_rating_per_movie'], ratings['ReleaseAge']))
-        y = np.array(ratings['Rating'])
-        return X, y
-
+    
     def extract_features(self, ratings):
         X = np.column_stack((
         ratings['rating_count_per_user'],
