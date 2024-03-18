@@ -29,12 +29,45 @@ class XGBModel:
             'n_estimators': 100
         }
 
+    
+
     def extract_features(self):
         # Extracting features and target variable from the ratings DataFrame
-        self.X = np.column_stack((self.ratings['rating_count_per_user'], self.ratings['rating_count_per_movie'],
-                                  self.ratings['avg_rating_per_person'],
-                                  self.ratings['avg_rating_per_movie'], self.ratings['ReleaseAge'],))
+        self.X = np.column_stack((
+        self.ratings['rating_count_per_user'],
+        self.ratings['rating_count_per_movie'],
+        self.ratings['avg_rating_per_person'],
+        self.ratings['avg_rating_per_movie'],
+        self.ratings['ReleaseAge'],
+        # Add cluster features
+        self.ratings['Cluster_0'], self.ratings['Cluster_1'], 
+        self.ratings['Cluster_2'], self.ratings['Cluster_3'], 
+        self.ratings['Cluster_4'],
+        # Add user embedding features
+        self.ratings['user_embedding_0'], self.ratings['user_embedding_1'],
+        self.ratings['user_embedding_2'], self.ratings['user_embedding_3'],
+        self.ratings['user_embedding_4'], self.ratings['user_embedding_5'],
+        self.ratings['user_embedding_6'], self.ratings['user_embedding_7'],
+        self.ratings['user_embedding_8'], self.ratings['user_embedding_9'],
+        self.ratings['user_embedding_10'], self.ratings['user_embedding_11'],
+        self.ratings['user_embedding_12'], self.ratings['user_embedding_13'],
+        self.ratings['user_embedding_14'], self.ratings['user_embedding_15'],
+        self.ratings['user_embedding_16'], self.ratings['user_embedding_17'],
+        self.ratings['user_embedding_18'], self.ratings['user_embedding_19'],
+        # Add movie embedding features
+        self.ratings['movie_embedding_0'], self.ratings['movie_embedding_1'],
+        self.ratings['movie_embedding_2'], self.ratings['movie_embedding_3'],
+        self.ratings['movie_embedding_4'], self.ratings['movie_embedding_5'],
+        self.ratings['movie_embedding_6'], self.ratings['movie_embedding_7'],
+        self.ratings['movie_embedding_8'], self.ratings['movie_embedding_9'],
+        self.ratings['movie_embedding_10'], self.ratings['movie_embedding_11'],
+        self.ratings['movie_embedding_12'], self.ratings['movie_embedding_13'],
+        self.ratings['movie_embedding_14'], self.ratings['movie_embedding_15'],
+        self.ratings['movie_embedding_16'], self.ratings['movie_embedding_17'],
+        self.ratings['movie_embedding_18'], self.ratings['movie_embedding_19']
+        ))
         self.y = np.array(self.ratings['Rating'])
+
 
     def objective(self, trial):
         # Define the hyperparameter search space
