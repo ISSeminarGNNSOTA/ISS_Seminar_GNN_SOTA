@@ -32,7 +32,6 @@ class XGBModel:
     
 
     def extract_features(self):
-        # Extracting features and target variable from the ratings DataFrame
         self.X = np.column_stack((
         self.ratings['rating_count_per_user'],
         self.ratings['rating_count_per_movie'],
@@ -66,7 +65,8 @@ class XGBModel:
         self.ratings['movie_embedding_16'], self.ratings['movie_embedding_17'],
         self.ratings['movie_embedding_18'], self.ratings['movie_embedding_19']
         ))
-        self.y = np.array(self.ratings['Rating'])
+    self.y = np.array(self.ratings['Rating'])
+
 
 
     def objective(self, trial):
