@@ -18,45 +18,45 @@ class LRModel:
     def __init__(self, alpha=2.0):
         self.model = Ridge(alpha=alpha)
 
-
-   
+    
     def extract_features(self, ratings):
         X = np.column_stack((
-            self.ratings['rating_count_per_user'],
-            self.ratings['rating_count_per_movie'],
-            self.ratings['avg_rating_per_person'],
-            self.ratings['avg_rating_per_movie'],
-            self.ratings['ReleaseAge'],
-            # Add cluster features
-            self.ratings['Cluster_0'], self.ratings['Cluster_1'], 
-            self.ratings['Cluster_2'], self.ratings['Cluster_3'], 
-            self.ratings['Cluster_4'],
-            # Add user embedding features
-            self.ratings['user_embedding_0'], self.ratings['user_embedding_1'],
-            self.ratings['user_embedding_2'], self.ratings['user_embedding_3'],
-            self.ratings['user_embedding_4'], self.ratings['user_embedding_5'],
-            self.ratings['user_embedding_6'], self.ratings['user_embedding_7'],
-            self.ratings['user_embedding_8'], self.ratings['user_embedding_9'],
-            self.ratings['user_embedding_10'], self.ratings['user_embedding_11'],
-            self.ratings['user_embedding_12'], self.ratings['user_embedding_13'],
-            self.ratings['user_embedding_14'], self.ratings['user_embedding_15'],
-            self.ratings['user_embedding_16'], self.ratings['user_embedding_17'],
-            self.ratings['user_embedding_18'], self.ratings['user_embedding_19'],
-            # Add movie embedding features
-            self.ratings['movie_embedding_0'], self.ratings['movie_embedding_1'],
-            self.ratings['movie_embedding_2'], self.ratings['movie_embedding_3'],
-            self.ratings['movie_embedding_4'], self.ratings['movie_embedding_5'],
-            self.ratings['movie_embedding_6'], self.ratings['movie_embedding_7'],
-            self.ratings['movie_embedding_8'], self.ratings['movie_embedding_9'],
-            self.ratings['movie_embedding_10'], self.ratings['movie_embedding_11'],
-            self.ratings['movie_embedding_12'], self.ratings['movie_embedding_13'],
-            self.ratings['movie_embedding_14'], self.ratings['movie_embedding_15'],
-            self.ratings['movie_embedding_16'], self.ratings['movie_embedding_17'],
-            self.ratings['movie_embedding_18'], self.ratings['movie_embedding_19']
+        ratings['rating_count_per_user'],
+        ratings['rating_count_per_movie'],
+        ratings['avg_rating_per_person'],
+        ratings['avg_rating_per_movie'],
+        ratings['ReleaseAge'],
+        # Add cluster features
+        ratings['Cluster_0'], ratings['Cluster_1'], 
+        ratings['Cluster_2'], ratings['Cluster_3'], 
+        ratings['Cluster_4'],
+        # Add user embedding features
+        ratings['user_embedding_0'], ratings['user_embedding_1'],
+        ratings['user_embedding_2'], ratings['user_embedding_3'],
+        ratings['user_embedding_4'], ratings['user_embedding_5'],
+        ratings['user_embedding_6'], ratings['user_embedding_7'],
+        ratings['user_embedding_8'], ratings['user_embedding_9'],
+        ratings['user_embedding_10'], ratings['user_embedding_11'],
+        ratings['user_embedding_12'], ratings['user_embedding_13'],
+        ratings['user_embedding_14'], ratings['user_embedding_15'],
+        ratings['user_embedding_16'], ratings['user_embedding_17'],
+        ratings['user_embedding_18'], ratings['user_embedding_19'],
+        # Add movie embedding features
+        ratings['movie_embedding_0'], ratings['movie_embedding_1'],
+        ratings['movie_embedding_2'], ratings['movie_embedding_3'],
+        ratings['movie_embedding_4'], ratings['movie_embedding_5'],
+        ratings['movie_embedding_6'], ratings['movie_embedding_7'],
+        ratings['movie_embedding_8'], ratings['movie_embedding_9'],
+        ratings['movie_embedding_10'], ratings['movie_embedding_11'],
+        ratings['movie_embedding_12'], ratings['movie_embedding_13'],
+        ratings['movie_embedding_14'], ratings['movie_embedding_15'],
+        ratings['movie_embedding_16'], ratings['movie_embedding_17'],
+        ratings['movie_embedding_18'], ratings['movie_embedding_19']
         ))
-        self.X = X  # Note the use of self.X to store the features matrix
-        self.y = np.array(self.ratings['Rating'])  # Store the target variable
-        
+    y = np.array(ratings['Rating'])
+    return X, y
+
+    
 
     def cross_validate(self, ratings, num_folds=5):
         X, y = self.extract_features(ratings)
