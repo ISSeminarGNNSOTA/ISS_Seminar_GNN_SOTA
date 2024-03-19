@@ -152,10 +152,11 @@ class DataPreprocessor:
         self.ratings['MovieID'] = self.ratings['MovieID'].astype(int)
 
         # Step 3: Merge Embeddings with Ratings Data
-        ratings2 = self.ratings.merge(user_embeddings_df, on='UserID', how='left')
-        self.ratings = ratings2.merge(movie_embeddings_df, on='MovieID', how='left')
+        ratings = self.ratings.merge(user_embeddings_df, on='UserID', how='left')
+        self.ratings = ratings.merge(movie_embeddings_df, on='MovieID', how='left')
 
-
+        # Impute NaN values with 0
+        self.ratings.fillna(0, inplace=True
     
  
 
