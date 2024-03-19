@@ -32,7 +32,7 @@ class MLPModelOptimized:
         self.ratings['Cluster_2'], self.ratings['Cluster_3'], 
         self.ratings['Cluster_4'],
         # Add user embedding features
-        '''    
+        """  
         self.ratings['user_embedding_0'], self.ratings['user_embedding_1'],
         self.ratings['user_embedding_2'], self.ratings['user_embedding_3'],
         self.ratings['user_embedding_4'], self.ratings['user_embedding_5'],
@@ -54,7 +54,7 @@ class MLPModelOptimized:
         self.ratings['movie_embedding_14'], self.ratings['movie_embedding_15'],
         self.ratings['movie_embedding_16'], self.ratings['movie_embedding_17'],
         self.ratings['movie_embedding_18'], self.ratings['movie_embedding_19']
-        '''
+        """
         ))
         y = np.array(self.ratings['Rating'])
         return X, y
