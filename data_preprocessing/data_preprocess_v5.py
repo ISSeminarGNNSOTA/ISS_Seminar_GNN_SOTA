@@ -82,45 +82,55 @@ class DataPreprocessor:
                                     unique_columns_8['Cluster_2'], unique_columns_9['Cluster_3'], 
                                     unique_columns_10['Cluster_4']], axis=1)
     
+   
+
     def get_node_embeddings_node2vec(self, dimensions=20, walk_length=16, num_walks=100, workers=4, window=10, min_count=1, batch_words=4):
         # Step 1: Prepare the Graph
         G = nx.Graph()
-
+    
         # Adding nodes with the 'bipartite' attribute
         for _, row in self.ratings.iterrows():
             G.add_node(row['UserID'], bipartite=0)  # Add user node
             G.add_node(row['MovieID'], bipartite=1)  # Add movie node
             G.add_edge(row['UserID'], row['MovieID'], weight=row['Rating'])
-
+    
+        # Ensure all unique IDs are included as nodes
+        all_user_ids = set(self.ratings['UserID'].unique())
+        all_movie_ids = set(self.ratings['MovieID'].unique())
+        print(f"Expected {len(all_user_ids)} user nodes, {len(all_movie_ids)} movie nodes.")
+    
         # Step 2: Generate Node2Vec Embeddings
-        # Initialize Node2Vec model
-        node2vec = Node2Vec(G, dimensions=20, walk_length=16, num_walks=100, workers=4)
-
+        node2vec = Node2Vec(G, dimensions=dimensions, walk_length=walk_length, num_walks=num_walks, workers=workers, p=1, q=1)
+    
         # Train Node2Vec model
-        model = node2vec.fit(window=10, min_count=1, batch_words=4)
-
+        model = node2vec.fit(window=window, min_count=min_count, batch_words=batch_words)
+    
         # Extracting embeddings and converting node IDs back to integers
         user_embeddings = {int(node): model.wv[str(node)] for node in G.nodes() if G.nodes[node]['bipartite'] == 0 and str(node) in model.wv}
         movie_embeddings = {int(node): model.wv[str(node)] for node in G.nodes() if G.nodes[node]['bipartite'] == 1 and str(node) in model.wv}
-
-
+    
         # Convert embeddings dictionaries to DataFrames
-        user_embeddings_df = pd.DataFrame.from_dict(user_embeddings, orient='index').reset_index()
-        movie_embeddings_df = pd.DataFrame.from_dict(movie_embeddings, orient='index').reset_index()
-
+        user_embeddings_df = pd.DataFrame.from_dict(user_embeddings, orient='index').reset_index().rename(columns={'index': 'UserID'})
+        movie_embeddings_df = pd.DataFrame.from_dict(movie_embeddings, orient='index').reset_index().rename(columns={'index': 'MovieID'})
+    
         # Rename columns appropriately
-        user_embeddings_df.columns = ['UserID'] + [f'user_embedding_{i}' for i in range(user_embeddings_df.shape[1] - 1)]
-        movie_embeddings_df.columns = ['MovieID'] + [f'movie_embedding_{i}' for i in range(movie_embeddings_df.shape[1] - 1)]
-
+        user_embeddings_df.columns = ['UserID'] + [f'user_embedding_{i}' for i in range(dimensions)]
+        movie_embeddings_df.columns = ['MovieID'] + [f'movie_embedding_{i}' for i in range(dimensions)]
+    
         # Ensure 'UserID' and 'MovieID' in 'ratings' are of type int
         self.ratings['UserID'] = self.ratings['UserID'].astype(int)
         self.ratings['MovieID'] = self.ratings['MovieID'].astype(int)
-
+        user_embeddings_df['UserID'] = user_embeddings_df['UserID'].astype(int)
+        movie_embeddings_df['MovieID'] = movie_embeddings_df['MovieID'].astype(int)
+    
         # Step 3: Merge Embeddings with Ratings Data
-        ratings2 = self.ratings.merge(user_embeddings_df, on='UserID', how='left')
-        self.ratings = ratings2.merge(movie_embeddings_df, on='MovieID', how='left')
-
- 
+        ratings_with_user_embeddings = self.ratings.merge(user_embeddings_df, on='UserID', how='left')
+        self.ratings = ratings_with_user_embeddings.merge(movie_embeddings_df, on='MovieID', how='left')
+    
+        # Debug: Check for NaN values after merge
+        print("NaN values after merge:", self.ratings.isna().sum().sum())
+    
+     
     
     def get_node_embeddings_deepwalk(self, dimensions=20, walk_length=16, num_walks=100, workers=4, window=10, min_count=1, batch_words=4):
         # Step 1: Prepare the Graph
