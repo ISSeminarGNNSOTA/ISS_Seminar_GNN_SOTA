@@ -156,7 +156,7 @@ class DataPreprocessor:
         self.ratings = ratings.merge(movie_embeddings_df, on='MovieID', how='left')
 
         # Impute NaN values with 0
-        self.ratings.fillna(0, inplace=True
+        self.ratings.fillna(0, inplace=True)
     
  
 
