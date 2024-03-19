@@ -53,8 +53,8 @@ class LRModel:
         ratings['movie_embedding_16'], ratings['movie_embedding_17'],
         ratings['movie_embedding_18'], ratings['movie_embedding_19']
         ))
-    y = np.array(ratings['Rating'])
-    return X, y
+        y = np.array(ratings['Rating'])
+        return X, y
 
     
 
