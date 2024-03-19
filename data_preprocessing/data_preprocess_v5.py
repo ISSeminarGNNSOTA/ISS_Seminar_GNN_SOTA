@@ -13,12 +13,8 @@ class DataPreprocessor:
         self.nlp_performed = nlp_performed 
 
     def filter_data(self, min_userID=0, max_userID=100):
-        # Filter users
         self.df = self.df[(self.df['UserID'] >= min_userID) & (self.df['UserID'] <= max_userID)]
-        filtered_movie_ids = self.df['MovieID'].unique()
-        self.df = self.df[self.df['MovieID'].isin(filtered_movie_ids)]
         self.ratings = self.df.copy()
-
         
     def create_rating_user_movie_info(self):
         ratings = self.df.copy()
