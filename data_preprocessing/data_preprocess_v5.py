@@ -84,38 +84,40 @@ class DataPreprocessor:
 
 
     def get_node_embeddings_node2vec(self, dimensions=20, walk_length=16, num_walks=100, workers=4, window=10, min_count=1, batch_words=4):
-        # Step 1: Prepare the Graph
+        # Prepare the Graph
         G = nx.Graph()
-    
-        # Adding nodes with the 'bipartite' attribute
         for _, row in self.ratings.iterrows():
-            G.add_node(row['UserID'], bipartite=0)  # Add user node
-            G.add_node(row['MovieID'], bipartite=1)  # Add movie node
+            G.add_node(row['UserID'], bipartite=0)
+            G.add_node(row['MovieID'], bipartite=1)
             G.add_edge(row['UserID'], row['MovieID'], weight=row['Rating'])
-    
-        # Step 2: Generate Node2Vec Embeddings
+
+        # Generate Node2Vec Embeddings
         node2vec = Node2Vec(G, dimensions=dimensions, walk_length=walk_length, num_walks=num_walks, workers=workers)
         model = node2vec.fit(window=window, min_count=min_count, batch_words=batch_words)
-    
-        # Extracting embeddings and converting node IDs back to integers
+
+        # Extract embeddings
         user_embeddings = {int(node): model.wv[str(node)] for node in G.nodes() if G.nodes[node]['bipartite'] == 0 and str(node) in model.wv}
         movie_embeddings = {int(node): model.wv[str(node)] for node in G.nodes() if G.nodes[node]['bipartite'] == 1 and str(node) in model.wv}
-    
-        # Convert embeddings dictionaries to DataFrames
-        user_embeddings_df = pd.DataFrame.from_dict(user_embeddings, orient='index').reset_index()
-        movie_embeddings_df = pd.DataFrame.from_dict(movie_embeddings, orient='index').reset_index()
-    
-        # Rename columns appropriately
-        user_embeddings_df.columns = ['UserID'] + [f'user_embedding_{i}' for i in range(dimensions)]
-        movie_embeddings_df.columns = ['MovieID'] + [f'movie_embedding_{i}' for i in range(dimensions)]
-    
-        # Step 3: Merge Embeddings with Ratings Data
-        self.ratings = self.ratings.merge(user_embeddings_df, on='UserID', how='left').merge(movie_embeddings_df, on='MovieID', how='left')
-    
-        # Step 4: Impute NaN values with 0 for embedding columns
-        embedding_columns = [f'user_embedding_{i}' for i in range(dimensions)] + [f'movie_embedding_{i}' for i in range(dimensions)]
-        self.ratings[embedding_columns] = self.ratings[embedding_columns].fillna(0)
 
+        # Convert embeddings to DataFrames
+        user_embeddings_df = pd.DataFrame.from_dict(user_embeddings, orient='index').reset_index().rename(columns={'index': 'UserID'})
+        movie_embeddings_df = pd.DataFrame.from_dict(movie_embeddings, orient='index').reset_index().rename(columns={'index': 'MovieID'})
+
+        # Assign embedding columns
+        for i in range(dimensions):
+            user_embeddings_df[f'user_embedding_{i}'] = user_embeddings_df[0].apply(lambda x: x[i] if i < len(x) else 0)
+            movie_embeddings_df[f'movie_embedding_{i}'] = movie_embeddings_df[0].apply(lambda x: x[i] if i < len(x) else 0)
+
+        user_embeddings_df.drop(columns=[0], inplace=True)
+        movie_embeddings_df.drop(columns=[0], inplace=True)
+
+        # Merge embeddings with ratings data
+        self.ratings = self.ratings.merge(user_embeddings_df, on='UserID', how='left').merge(movie_embeddings_df, on='MovieID', how='left')
+
+        # Directly impute NaN values with 0 for all columns after merge
+        self.ratings.fillna(0, inplace=True)
+
+    
     
     def get_node_embeddings_deepwalk(self, dimensions=20, walk_length=16, num_walks=100, workers=4, window=10, min_count=1, batch_words=4):
         # Step 1: Prepare the Graph
