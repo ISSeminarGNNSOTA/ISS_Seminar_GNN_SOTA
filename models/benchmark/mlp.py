@@ -58,6 +58,7 @@ class MLPModelOptimized:
         self.X = X  # Note the use of self.X to store the features matrix
         self.y = np.array(self.ratings['Rating'])  # Store the target variable
 
+    
 
 
     def scale_data(self, X):
