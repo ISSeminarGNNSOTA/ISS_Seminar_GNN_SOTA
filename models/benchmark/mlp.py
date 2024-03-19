@@ -27,7 +27,6 @@ class MLPModelOptimized:
         self.ratings['avg_rating_per_person'],
         self.ratings['avg_rating_per_movie'],
         self.ratings['ReleaseAge'],
-        """
         # Add cluster features
         self.ratings['Cluster_0'], self.ratings['Cluster_1'], 
         self.ratings['Cluster_2'], self.ratings['Cluster_3'], 
@@ -55,7 +54,6 @@ class MLPModelOptimized:
         self.ratings['movie_embedding_14'], self.ratings['movie_embedding_15'],
         self.ratings['movie_embedding_16'], self.ratings['movie_embedding_17'],
         self.ratings['movie_embedding_18'], self.ratings['movie_embedding_19']
-        """
         ))
         y = np.array(self.ratings['Rating'])
         return X, y
