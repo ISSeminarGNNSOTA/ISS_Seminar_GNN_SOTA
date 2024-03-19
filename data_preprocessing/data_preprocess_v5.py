@@ -84,23 +84,6 @@ class DataPreprocessor:
     
    
 
-    import networkx as nx
-from node2vec import Node2Vec
-import numpy as np
-import pandas as pd
-
-class YourDataPreprocessor:
-    def __init__(self, ratings):
-        self.ratings = ratings
-
-    import pandas as pd
-import numpy as np
-import networkx as nx
-from node2vec import Node2Vec
-
-class YourDataPreprocessorClass:
-    def __init__(self, ratings):
-        self.ratings = ratings
 
     def get_node_embeddings_node2vec(self, dimensions=20, walk_length=16, num_walks=100, workers=4, window=10, min_count=1, batch_words=4):
         # Step 1: Prepare the Graph
