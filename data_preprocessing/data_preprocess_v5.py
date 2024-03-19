@@ -84,48 +84,46 @@ class DataPreprocessor:
     
    
 
-
-    def get_node_embeddings_node2vec(self, dimensions=20, walk_length=16, num_walks=100, workers=4, window=10, min_count=1, batch_words=4):
-        # Step 1: Prepare the Graph
+     def get_node_embeddings_node2vec(self, dimensions=20, walk_length=16, num_walks=100, workers=4, window=10, min_count=1, batch_words=4):
         G = nx.Graph()
         for _, row in self.ratings.iterrows():
-            G.add_node(row['UserID'], bipartite=0)  # Add user node
-            G.add_node(row['MovieID'], bipartite=1)  # Add movie node
+            G.add_node(row['UserID'], bipartite=0)
+            G.add_node(row['MovieID'], bipartite=1)
             G.add_edge(row['UserID'], row['MovieID'], weight=row['Rating'])
 
-        # Step 2: Generate Node2Vec Embeddings
         node2vec = Node2Vec(G, dimensions=dimensions, walk_length=walk_length, num_walks=num_walks, workers=workers)
         model = node2vec.fit(window=window, min_count=min_count, batch_words=batch_words)
 
         # Extract embeddings
-        user_embeddings = {int(node): model.wv[str(node)] for node in G.nodes() if G.nodes[node]['bipartite'] == 0 and str(node) in model.wv}
-        movie_embeddings = {int(node): model.wv[str(node)] for node in G.nodes() if G.nodes[node]['bipartite'] == 1 and str(node) in model.wv}
+        user_embeddings = {node: model.wv[str(node)] for node in G.nodes() if G.nodes[node]['bipartite'] == 0 and str(node) in model.wv}
+        movie_embeddings = {node: model.wv[str(node)] for node in G.nodes() if G.nodes[node]['bipartite'] == 1 and str(node) in model.wv}
 
-        # Convert embeddings to DataFrames
-        user_embeddings_df = pd.DataFrame.from_dict(user_embeddings, orient='index').reset_index()
-        movie_embeddings_df = pd.DataFrame.from_dict(movie_embeddings, orient='index').reset_index()
+        # Convert to DataFrame
+        user_embeddings_df = pd.DataFrame(user_embeddings).T.reset_index().rename(columns={'index': 'UserID'})
+        movie_embeddings_df = pd.DataFrame(movie_embeddings).T.reset_index().rename(columns={'index': 'MovieID'})
 
-        # Rename columns
-        user_embeddings_df.columns = ['UserID'] + [f'user_embedding_{i}' for i in range(dimensions)]
-        movie_embeddings_df.columns = ['MovieID'] + [f'movie_embedding_{i}' for i in range(dimensions)]
+        # Prepare embedding column names
+        user_columns = ['user_embedding_{}'.format(i) for i in range(dimensions)]
+        movie_columns = ['movie_embedding_{}'.format(i) for i in range(dimensions)]
 
-        # Ensure correct data types for merging
+        # Rename columns to standard naming
+        user_embeddings_df.columns = ['UserID'] + user_columns
+        movie_embeddings_df.columns = ['MovieID'] + movie_columns
+
+        # Ensure UserID and MovieID are integers for merging
         self.ratings['UserID'] = self.ratings['UserID'].astype(int)
         self.ratings['MovieID'] = self.ratings['MovieID'].astype(int)
+        user_embeddings_df['UserID'] = user_embeddings_df['UserID'].astype(int)
+        movie_embeddings_df['MovieID'] = movie_embeddings_df['MovieID'].astype(int)
 
         # Merge embeddings with ratings data
         ratings_with_embeddings = self.ratings.merge(user_embeddings_df, on='UserID', how='left').merge(movie_embeddings_df, on='MovieID', how='left')
 
-        # Impute NaN values in embedding columns with 0 vectors
-        embedding_columns = [f'user_embedding_{i}' for i in range(dimensions)] + [f'movie_embedding_{i}' for i in range(dimensions)]
-        ratings_with_embeddings[embedding_columns] = ratings_with_embeddings[embedding_columns].fillna(0)
+        # Impute NaN values for all embedding columns
+        for column in user_columns + movie_columns:
+            ratings_with_embeddings[column].fillna(0, inplace=True)
 
-        # Update the ratings attribute
         self.ratings = ratings_with_embeddings
-
-        # Optional: Check for NaN values after imputation
-        print("NaN values after imputation:", self.ratings.isna().sum().sum())
-
 
     
     
