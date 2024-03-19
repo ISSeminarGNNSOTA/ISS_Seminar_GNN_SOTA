@@ -26,9 +26,8 @@ class MLPModelOptimized:
         self.ratings['rating_count_per_movie'],
         self.ratings['avg_rating_per_person'],
         self.ratings['avg_rating_per_movie'],
-        self.ratings['ReleaseAge']
+        self.ratings['ReleaseAge'],
         """
-            ,
         # Add cluster features
         self.ratings['Cluster_0'], self.ratings['Cluster_1'], 
         self.ratings['Cluster_2'], self.ratings['Cluster_3'], 
