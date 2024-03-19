@@ -142,3 +142,7 @@ class GraphDataBuilder2Fold:
 
 
         return self.data, self.train_data_1, self.train_data_2, self.train_data_2, self.train_data_1, self.train_data_final, self.test_data
+
+# The function of this class is to transform the data provided by the data_precessor into 
+# graph structured data and split it by means of 2-Fold Further the final training set for 
+# the evaluation is provided
