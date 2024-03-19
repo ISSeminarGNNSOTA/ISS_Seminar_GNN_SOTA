@@ -19,7 +19,8 @@ class LRModel:
         self.model = Ridge(alpha=alpha)
 
 
-    def extract_features(self):
+   
+    def extract_features(self, ratings):
         X = np.column_stack((
             self.ratings['rating_count_per_user'],
             self.ratings['rating_count_per_movie'],
@@ -55,7 +56,6 @@ class LRModel:
         ))
         self.X = X  # Note the use of self.X to store the features matrix
         self.y = np.array(self.ratings['Rating'])  # Store the target variable
-
         
 
     def cross_validate(self, ratings, num_folds=5):
