@@ -10,7 +10,7 @@ class XGBModel:
     def __init__(self, ratings, objective='reg:squarederror'):
         self.ratings = ratings
         self.extract_features()
-        # Default parameters - these can be overridden during hyperparameter tuning
+        # Default parameters 
         self.params = {
             'objective': objective,
             'colsample_bytree': 0.3,
