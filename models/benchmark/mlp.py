@@ -137,12 +137,12 @@ class MLPModelOptimized:
     def display_predictions(self, num_examples=10):
         """Displays the actual vs. predicted ratings for a number of examples from the test set."""
         if self.model is None:
-            raise Exception("Model has not been trained - please train the model before making predictions.")
+            raise Exception
         
         # Make predictions on the test data
         y_pred_test = self.model.predict(self.X_test)
         
-        # Display the actual vs. predicted ratings for the specified number of examples
+        # Display the actual vs. predicted ratings
         print("Actual vs. Predicted Ratings:")
         for actual, predicted in zip(self.y_test[:num_examples], y_pred_test[:num_examples]):
             print(f"Actual: {actual}, Predicted: {predicted:.4f}")
