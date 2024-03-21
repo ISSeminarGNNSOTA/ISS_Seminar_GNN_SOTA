@@ -4,6 +4,7 @@ import optuna
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 import time
 from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split
 
 class XGBModel:
     def __init__(self, ratings, objective='reg:squarederror'):
