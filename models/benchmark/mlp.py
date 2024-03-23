@@ -14,48 +14,23 @@ class MLPModelOptimized:
         self.ratings = ratings
         self.X, self.y = self.prepare_data()
         self.X = self.scale_data(self.X)
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X, self.y, test_size=0.1, random_state=888)  # 90% training, 10% test split
-
+        self.X_train, self.y_train, self.X_test, self.y_test = self.split_data()
 
     def prepare_data(self):
-        X = np.column_stack((
-        self.ratings['rating_count_per_user'],
-        self.ratings['rating_count_per_movie'],
-        self.ratings['avg_rating_per_person'],
-        self.ratings['avg_rating_per_movie'],
-        self.ratings['ReleaseAge'],
-        # Add cluster features
-        self.ratings['Cluster_0'], self.ratings['Cluster_1'],
-        self.ratings['Cluster_2'], self.ratings['Cluster_3'],
-        self.ratings['Cluster_4'],
-        # Add user embedding features
-
-        self.ratings['user_embedding_0'], self.ratings['user_embedding_1'],
-        self.ratings['user_embedding_2'], self.ratings['user_embedding_3'],
-        self.ratings['user_embedding_4'], self.ratings['user_embedding_5'],
-        self.ratings['user_embedding_6'], self.ratings['user_embedding_7'],
-        self.ratings['user_embedding_8'], self.ratings['user_embedding_9'],
-        self.ratings['user_embedding_10'], self.ratings['user_embedding_11'],
-        self.ratings['user_embedding_12'], self.ratings['user_embedding_13'],
-        self.ratings['user_embedding_14'], self.ratings['user_embedding_15'],
-        self.ratings['user_embedding_16'], self.ratings['user_embedding_17'],
-        self.ratings['user_embedding_18'], self.ratings['user_embedding_19'],
-        # Add movie embedding features
-        self.ratings['movie_embedding_0'], self.ratings['movie_embedding_1'],
-        self.ratings['movie_embedding_2'], self.ratings['movie_embedding_3'],
-        self.ratings['movie_embedding_4'], self.ratings['movie_embedding_5'],
-        self.ratings['movie_embedding_6'], self.ratings['movie_embedding_7'],
-        self.ratings['movie_embedding_8'], self.ratings['movie_embedding_9'],
-        self.ratings['movie_embedding_10'], self.ratings['movie_embedding_11'],
-        self.ratings['movie_embedding_12'], self.ratings['movie_embedding_13'],
-        self.ratings['movie_embedding_14'], self.ratings['movie_embedding_15'],
-        self.ratings['movie_embedding_16'], self.ratings['movie_embedding_17'],
-        self.ratings['movie_embedding_18'], self.ratings['movie_embedding_19']
-        ))
+        X = self.ratings.drop(columns=['Unnamed: 0', 'MovieID', 'UserID', 'Rating', 'Date', 'movie_graph_id']).values
         y = np.array(self.ratings['Rating'])
         return X, y
+    
+    def split_data(self, test_size=0.1):
+        # Determine the number of samples for the test set
+        num_test_samples = int(len(self.X) * test_size)
 
+        # Split the data
+        X_test, y_test = self.X[-num_test_samples:], self.y[-num_test_samples:]
+        X_train, y_train = self.X[:-num_test_samples], self.y[:-num_test_samples]
+
+        return X_train, y_train, X_test, y_test   
+    
     def scale_data(self, X):
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
@@ -98,8 +73,7 @@ class MLPModelOptimized:
         if '_' in option:
             return tuple(map(int, option.split('_')))
         return (int(option),)
-
-
+    
     def tune_hyperparameters(self, n_trials=10):
         study = optuna.create_study(direction='minimize')
         study.optimize(self.objective, n_trials=n_trials)
