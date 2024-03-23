@@ -10,47 +10,24 @@ class LRModel:
     def __init__(self, ratings):
         self.ratings = ratings
         self.X, self.y = self.extract_features(ratings)
-        self.X_train_val, self.X_test, self.y_train_val, self.y_test = train_test_split(self.X, self.y, test_size=0.1, random_state=888)
+        self.X_train_val, self.y_train_val, self.X_test, self.y_test = self.split_data()
         self.model = None  # Initialize the model attribute
 
   
     def extract_features(self, ratings):
-        X = np.column_stack((
-        ratings['rating_count_per_user'],
-        ratings['rating_count_per_movie'],
-        ratings['avg_rating_per_person'],
-        ratings['avg_rating_per_movie'],
-        ratings['ReleaseAge'],
-        # Add cluster features
-        ratings['Cluster_0'], ratings['Cluster_1'], 
-        ratings['Cluster_2'], ratings['Cluster_3'], 
-        ratings['Cluster_4'],
-        # Add user embedding features
-        ratings['user_embedding_0'], ratings['user_embedding_1'],
-        ratings['user_embedding_2'], ratings['user_embedding_3'],
-        ratings['user_embedding_4'], ratings['user_embedding_5'],
-        ratings['user_embedding_6'], ratings['user_embedding_7'],
-        ratings['user_embedding_8'], ratings['user_embedding_9'],
-        ratings['user_embedding_10'], ratings['user_embedding_11'],
-        ratings['user_embedding_12'], ratings['user_embedding_13'],
-        ratings['user_embedding_14'], ratings['user_embedding_15'],
-        ratings['user_embedding_16'], ratings['user_embedding_17'],
-        ratings['user_embedding_18'], ratings['user_embedding_19'],
-        # Add movie embedding features
-        ratings['movie_embedding_0'], ratings['movie_embedding_1'],
-        ratings['movie_embedding_2'], ratings['movie_embedding_3'],
-        ratings['movie_embedding_4'], ratings['movie_embedding_5'],
-        ratings['movie_embedding_6'], ratings['movie_embedding_7'],
-        ratings['movie_embedding_8'], ratings['movie_embedding_9'],
-        ratings['movie_embedding_10'], ratings['movie_embedding_11'],
-        ratings['movie_embedding_12'], ratings['movie_embedding_13'],
-        ratings['movie_embedding_14'], ratings['movie_embedding_15'],
-        ratings['movie_embedding_16'], ratings['movie_embedding_17'],
-        ratings['movie_embedding_18'], ratings['movie_embedding_19']
-        ))
+        X = ratings.drop(columns=['Unnamed: 0', 'MovieID', 'UserID', 'Rating', 'Date', 'movie_graph_id']).values
         y = np.array(ratings['Rating'])
         return X, y
 
+    def split_data(self, test_size=0.1):
+        # Determine the number of samples for the test set
+        num_test_samples = int(len(self.X) * test_size)
+
+        # Split the data
+        X_test, y_test = self.X[-num_test_samples:], self.y[-num_test_samples:]
+        X_train_val, y_train_val = self.X[:-num_test_samples], self.y[:-num_test_samples]
+
+        return X_train_val, y_train_val, X_test, y_test    
     
     def tune_hyperparameters(self, n_trials=10):
         def objective(trial):
