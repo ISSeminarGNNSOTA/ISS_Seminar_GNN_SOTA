@@ -6,11 +6,11 @@ Autors: Ali Jaabous, Bora Eguz, Ozan Ayhan
 
 Supervisor: 
 
-This repository will contain the necessary scripts and jupyter notebooks to reproduce our project proceedings
-
-# Intro
+This repository will contain the necessary scripts and jupyter notebooks to reproduce our project proceedings. To use the models and reproduce our results or modified ones you can easily
+call this Colab Notebook. Within this Notebook there is a already existing connection to this Github which increses usabiliy and reduces boarding time.
 
 -------------------------------------------------------------------------------------------
+
 
 ![image](https://github.com/ISSeminarGNNSOTA/ISS_Seminar_GNN_SOTA/assets/162732442/bf387468-62ab-4ebc-a892-901f0dcfe791)
 
