@@ -1,5 +1,5 @@
 # ISS_Seminar_GNN_SOTA
-_________________________________________________________________________________________
+
 Infomations Systems Seminar Project: GNN's as State of the Art Recommender Systems
 
 Autors: Ali Jaabous, Bora Eguz, Ozan Ayhan
